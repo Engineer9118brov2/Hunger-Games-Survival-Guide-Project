@@ -10,7 +10,7 @@
 
         /* Basic Styles */
         #matrix-canvas {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -273,8 +273,8 @@
     </style>
 </head>
 <body>
-    <canvas id="matrix-canvas"></canvas>
     <header>
+        <canvas id="matrix-canvas"></canvas>
         <h1>Welcome, Tributes</h1>
     </header>
 
@@ -511,6 +511,7 @@
             // Matrix Rain Effect
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
+            const header = document.querySelector('header');
 
             const mockingjay = new Image();
             mockingjay.src = 'https://uproxx.com/wp-content/uploads/2015/06/mockingjay-optical-illusion.jpg?w=1024';
@@ -518,8 +519,8 @@
             let drops = [];
 
             function setup() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                canvas.width = header.clientWidth;
+                canvas.height = header.clientHeight;
 
                 const columns = Math.floor(canvas.width / 20);
                 drops = [];
