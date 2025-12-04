@@ -16,12 +16,10 @@
             margin: 0;
             padding: 0;
         }
-
-        /* Header */
         header {
             background-image: url('https://wallpapers.com/images/hd/hunger-games-background-19ntyy00nxj205aw.jpg');
             background-attachment: fixed;
-            background-position: center;
+            background-position: center; /* Initial position (center 50%) */
             background-repeat: no-repeat;
             background-size: cover;
             height: 100vh;
@@ -30,8 +28,31 @@
             align-items: center;
             text-align: center;
             position: relative;
+            /* Add smooth transition for the initial background-position change */
+            transition: background-position 0.5s ease-in-out;
         }
 
+        /* Define the continuous animation for the hover state */
+        header:hover {
+            animation-name: backgroundRoll;
+            animation-duration: 4s; /* Slower duration for a subtle roll */
+            animation-iteration-count: infinite; 
+            animation-direction: alternate; /* Roll left, then roll right */
+            animation-timing-function: linear; /* Constant speed */
+        }
+
+        @keyframes backgroundRoll {
+            /* Moves the background position from center (50%) slightly left (40%) */
+            from {
+                background-position: 40% center; 
+            }
+            /* Moves the background position slightly right (60%) */
+            to {
+                background-position: 60% center; 
+            }
+        }
+
+        
         header::after {
             content: '';
             position: absolute;
