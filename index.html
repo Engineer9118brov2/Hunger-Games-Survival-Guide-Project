@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunger Games Survival Guide</title>
+    <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Permanent+Marker&display=swap');
+
+        /* Basic Styles */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #000;
+        }
+
+        body {
+            background-color: transparent;
+            color: #fff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header */
+        header {
+            background-image: url('https://via.placeholder.com/1920x1080.png?text=Arena+Background');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+            z-index: 1;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem;
+        }
+
+        section {
+            padding: 4rem 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ff00ff;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: #00ffff;
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* Supplies Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #555;
+        }
+
+        th {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffff;
+        }
+
+        tbody tr:hover {
+            background-color: #1a1a1a;
+            transform: scale(1.02);
+            transition: background-color: 0.3s, transform 0.3s;
+        }
+
+        /* Strategies List */
+        ol {
+            list-style: none;
+            counter-reset: strategy-counter;
+            padding-left: 0;
+        }
+
+        ol li {
+            counter-increment: strategy-counter;
+            margin-bottom: 1.5rem;
+            padding-left: 3rem;
+            position: relative;
+        }
+
+        ol li::before {
+            content: counter(strategy-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #ff00ff;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+        /* Quiz Section */
+        #quiz-container {
+            margin-top: 2rem;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question p {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .answers button {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 0.8rem 1.5rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .answers button:hover {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+        }
+
+        #quiz-results {
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-shadow: 0 0 5px #ff00ff;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .image-container figure {
+            margin: 1rem;
+            text-align: center;
+            width: 45%;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        .image-container figcaption {
+            margin-top: 0.5rem;
+            font-family: 'Permanent Marker', cursive;
+            color: #ff00ff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .image-container figure {
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 3rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr { border: 1px solid #ccc; }
+
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                font-family: 'Orbitron', sans-serif;
+                color: #00ffff;
+            }
+
+            td:nth-of-type(1):before { content: "Supply"; }
+            td:nth-of-type(2):before { content: "Benefits"; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <header>
+        <h1>Welcome, Tributes</h1>
+    </header>
+
+    <main>
+        <section id="introduction">
+            <h2>A Message from Atala</h2>
+            <p>Greetings, tributes. I am Atala, head trainer for the Hunger Games. You've been selected to represent your districts in this ultimate test of skill, cunning, and endurance. The arena is unforgiving, designed by the Gamemakers to push you to your limits. But with the right knowledge, you might just outlast the others. This guide draws from the realities of past Games, including the 74th, where tributes like Katniss Everdeen and Peeta Mellark demonstrated what it takes to survive. Remember: only one emerges victorious. Use this wisely—train hard, stay alert, and may the odds be ever in your favor.</p>
+        </section>
+
+        <section id="supplies">
+            <h2>Essential Supplies from the Cornucopia</h2>
+            <p>The Cornucopia is the heart of the arena's initial chaos, stocked with vital items by the Gamemakers. These supplies decrease in value the farther they are from the horn—grab what you can without becoming a target in the bloodbath. Below is a list of at least 10 key supplies, based on those seen in previous arenas, along with their benefits. Prioritize items that match your skills; for example, a skilled hunter should aim for weapons like bows.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supply</th>
+                        <th>Benefits</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Bow and arrows</td>
+                        <td>Ideal for long-range attacks and hunting game. Provides food and defense without close combat; Katniss used this to great effect for silent kills and sustenance.</td>
+                    </tr>
+                    <tr>
+                        <td>Knives</td>
+                        <td>Versatile for close-quarters combat, cutting ropes or vines, and preparing food. Easy to conceal and throw for quick strikes.</td>
+                    </tr>
+                    <tr>
+                        <td>Sleeping bag</td>
+                        <td>Retains body heat during cold nights, preventing hypothermia. Compact and essential for rest without exposure.</td>
+                    </tr>
+                    <tr>
+                        <td>Iodine</td>
+                        <td>Purifies water from streams or lakes, preventing dehydration and illness from contaminated sources. A small bottle can last days.</td>
+                    </tr>
+                    <tr>
+                        <td>Matches</td>
+                        <td>Starts fires for cooking, warmth, and signaling (if desperate). Use sparingly to avoid drawing attention with smoke.</td>
+                    </tr>
+                    <tr>
+                        <td>Wire coil</td>
+                        <td>Sets snares for trapping animals or creating alarms/tripwires against other tributes. Multifunctional for repairs or traps.</td>
+                    </tr>
+                    <tr>
+                        <td>Night-vision glasses</td>
+                        <td>Allows visibility in darkness, giving an edge for nighttime movement or ambushes while others are blind.</td>
+                    </tr>
+                    <tr>
+                        <td>Empty water bottle</td>
+                        <td>Stores clean water once purified; crucial for hydration during long treks away from sources.</td>
+                    </tr>
+                    <tr>
+                        <td>Backpack</td>
+                        <td>Organizes and carries multiple items hands-free, increasing mobility. Often pre-packed with basics like food or tools.</td>
+                    </tr>
+                    <tr>
+                        <td>Rope</td>
+                        <td>Useful for climbing trees, tying shelters, or making lassos. Strong for binding wounds or securing gear.</td>
+                    </tr>
+                    <tr>
+                        <td>Bread</td>
+                        <td>Quick energy source; non-perishable and shareable in alliances. Sustains you during early starvation risks.</td>
+                    </tr>
+                    <tr>
+                        <td>Apples</td>
+                        <td>Fresh fruit for hydration and vitamins; lightweight and edible raw to combat hunger without cooking.</td>
+                    </tr>
+                    <tr>
+                        <td>Dried beef strips</td>
+                        <td>High-protein, long-lasting food that doesn't spoil quickly. Boosts strength and endurance for prolonged survival.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="image-container">
+                <figure>
+                    <img src="https://via.placeholder.com/400x300.png?text=Cornucopia" alt="Cornucopia">
+                    <figcaption>The Cornucopia: high risk, high reward.</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://via.placeholder.com/400x300.png?text=Tribute+with+Bow" alt="Tribute with bow">
+                    <figcaption>A bow can be your most valuable asset.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="strategies">
+            <h2>Best Strategies to Survive the Games</h2>
+            <p>Survival isn't just about supplies—it's about strategy. From my years training tributes, here are proven tactics drawn from successful victors. Adapt them to the arena's environment, which could be forests, deserts, or anything the Gamemakers devise.</p>
+            <ol>
+                <li>Assess the Bloodbath Wisely: If you're strong like a Career, charge the Cornucopia for prime supplies. Otherwise, run to the edges immediately—many tributes die in the first minutes.</li>
+                <li>Prioritize Water: Dehydration kills faster than hunger. Locate streams or lakes early and purify with iodine. Stay near water but hidden to avoid ambushes.</li>
+                <li>Forage and Hunt: Use skills like trapping with wire or shooting game to sustain yourself. Edible plants and roots can supplement; test carefully to avoid poison.</li>
+                <li>Form Strategic Alliances: Partner with compatible tributes for protection and shared resources, but be ready to betray when numbers dwindle. Trust is temporary.</li>
+                <li>Camouflage and Hide: Blend into the environment using mud, leaves, or painting skills. Climb trees for safety and vantage points, like Rue did.</li>
+                <li>Avoid the Careers Early: They hunt in packs—steer clear until they're weakened. Use the arena's size to your advantage.</li>
+                <li>Manage Fire Carefully: Essential for warmth and cooking, but smoke signals your position. Build small, concealed fires or use them as traps.</li>
+                <li>Play to Sponsors: Show personality in training and interviews to earn gifts like medicine. A likable tribute gets parachutes when needed.</li>
+                <li>Set Traps and Alarms: Use wire or rope to booby-trap areas, alerting you to intruders or catching food.</li>
+                <li>Stay Mobile and Alert: Don't camp in one spot too long. Move quietly, listen for cannons, and adapt to Gamemaker twists like fires or mutts.</li>
+            </ol>
+            <div class="image-container">
+                <figure>
+                    <img src="https://via.placeholder.com/400x300.png?text=Arena+Landscape" alt="Arena landscape">
+                    <figcaption>The arena can be a weapon itself.</figcaption>
+                </figure>
+                <figure>
+                    <img src="https://via.placeholder.com/400x300.png?text=Navigating+Dangers" alt="Tribute navigating dangers">
+                    <figcaption>Constant vigilance is key to survival.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="quiz">
+            <h2>Survival Quiz</h2>
+            <div id="quiz-container">
+                <!-- Quiz will be dynamically generated here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>May the odds be ever in your favor.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll Animations
+            const sections = document.querySelectorAll('section');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Survival Quiz
+            const quizContainer = document.getElementById('quiz-container');
+            const quizData = [
+                {
+                    question: "What is the first priority upon entering the arena?",
+                    answers: ["Find a weapon", "Build a shelter", "Find a water source", "Form an alliance"],
+                    correct: "Find a water source"
+                },
+                {
+                    question: "When is it safest to move around the arena?",
+                    answers: ["Midday", "During the night", "At dawn", "During a Gamemaker event"],
+                    correct: "During the night"
+                },
+                {
+                    question: "What is the most common cause of death in the early stages of the Games?",
+                    answers: ["Starvation", "Dehydration", "The Cornucopia bloodbath", "Wild animals"],
+                    correct: "The Cornucopia bloodbath"
+                },
+                {
+                    question: "A sponsor sends you a small loaf of bread. What does it likely mean?",
+                    answers: ["You are their favorite", "You need energy", "It's a trap", "They are from your district"],
+                    correct: "You need energy"
+                }
+            ];
+
+            let score = 0;
+            let currentQuestionIndex = 0;
+
+            function loadQuiz() {
+                quizContainer.innerHTML = ''; // Clear previous content
+                if (currentQuestionIndex < quizData.length) {
+                    const currentQuestion = quizData[currentQuestionIndex];
+                    const questionEl = document.createElement('div');
+                    questionEl.classList.add('question');
+                    questionEl.innerHTML = `<p>${currentQuestionIndex + 1}. ${currentQuestion.question}</p>`;
+
+                    const answersEl = document.createElement('div');
+                    answersEl.classList.add('answers');
+
+                    currentQuestion.answers.forEach(answer => {
+                        const button = document.createElement('button');
+                        button.innerText = answer;
+                        button.addEventListener('click', () => selectAnswer(answer, currentQuestion.correct, answersEl));
+                        answersEl.appendChild(button);
+                    });
+
+                    questionEl.appendChild(answersEl);
+                    quizContainer.appendChild(questionEl);
+                } else {
+                    showResults();
+                }
+            }
+
+            function selectAnswer(selected, correct, answersEl) {
+                if (selected === correct) {
+                    score++;
+                }
+                // Disable all buttons for this question
+                const buttons = answersEl.querySelectorAll('button');
+                buttons.forEach(button => {
+                    button.disabled = true;
+                    if(button.innerText === correct) {
+                        button.style.backgroundColor = '#00ff00';
+                        button.style.color = '#000';
+                    } else if (button.innerText === selected) {
+                        button.style.backgroundColor = '#ff0000';
+                    }
+                });
+
+                // Load the next question after a short delay
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuiz();
+                }, 1500);
+            }
+
+            function showResults() {
+                quizContainer.innerHTML = `<div id="quiz-results">You scored ${score} out of ${quizData.length}!</div>`;
+                let feedback = '';
+                if(score === quizData.length){
+                    feedback = "Excellent! You have the makings of a victor."
+                } else if (score >= quizData.length / 2) {
+                    feedback = "Not bad, tribute. You might just survive the first few days."
+                } else {
+                    feedback = "You need more training. The arena will not be so forgiving."
+                }
+                quizContainer.innerHTML += `<p>${feedback}</p>`;
+            }
+
+            loadQuiz();
+
+            // Matrix Rain Effect
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+
+            const mockingjay = new Image();
+            mockingjay.src = 'images/mockingjay.jpg';
+
+            let drops = [];
+
+            function setup() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const columns = Math.floor(canvas.width / 20);
+                drops = [];
+                for (let i = 0; i < columns; i++) {
+                    drops[i] = 1;
+                }
+            }
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = '#0F0';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const x = i * 20;
+                    const y = drops[i] * 20;
+                    ctx.drawImage(mockingjay, x, y, 20, 20);
+
+                    if (y > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            mockingjay.onload = () => {
+                setup();
+                setInterval(draw, 33);
+            };
+
+            window.addEventListener('resize', setup);
+        });
+    </script>
+</body>
+</html>
