@@ -8,314 +8,147 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Permanent+Marker&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-        /* ============================================= */
-        /* GLIMMERING AURA + PARALLAX BACKGROUND (everything except header) */
-        /* ============================================= */
+        * { box-sizing:border-box; margin:0; padding:0; }
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #000;
-            color: #fff;
-            font-family: 'Space Mono', monospace;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            background:#000;
+            color:#fff;
+            font-family:'Space Mono',monospace;
+            overflow-x:hidden;
+            min-height:100vh;
         }
 
-        /* Fixed parallax container behind everything except the header */
+        /* Lightweight glowing aura – smooth on Chromebooks */
         .aura-parallax {
-            position: fixed;
-            inset: 0;
-            top: 100vh; /* Starts right after the header */
-            pointer-events: none;
-            z-index: -1;
-            transform: translateZ(0);
+            position:fixed;
+            inset:0;
+            pointer-events:none;
+            z-index:0;
+        }
+        .aura-light {
+            position:absolute;
+            width:200%;
+            height:200%;
+            background:radial-gradient(circle at 50% 50%,
+                rgba(0,255,200,0.10),
+                rgba(100,0,255,0.06) 40%,
+                transparent 70%);
+            animation:glow 22s ease-in-out infinite alternate;
+            transform:translate(-25%,-25%);
+        }
+        .aura-light:nth-child(2) {
+            background:radial-gradient(circle at 30% 70%,
+                rgba(255,215,0,0.08),transparent 70%);
+            animation:glow 28s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes glow {
+            0%   { transform:translate(-25%,-25%) scale(1); opacity:0.6; }
+            100% { transform:translate(-30%,-20%) scale(1.25); opacity:0.8; }
+        }
+        .mouse-tilt {
+            position:absolute;
+            inset:0;
+            background:linear-gradient(135deg,rgba(0,255,200,0.04),rgba(147,112,219,0.03));
+            transform:perspective(1000px) rotateY(0deg) rotateX(0deg);
+            transition:transform .3s ease-out;
         }
 
-        /* Breathing aura layers */
-        .aura-layer {
-            position: absolute;
-            absolute;
-            width: 200%;
-            height: 300%;
-            background: radial-gradient(circle at 50% 50%, 
-            rgba(0, 255, 200, 0.15) 0%,
-            rgba(150, 0, 255, 0.1) 30%,
-            transparent 70%);
-            animation: auraPulse 14s ease-in-out infinite alternate;
-            transform: translate(-25%, -25%);
-        }
-
-        .aura-layer:nth-child(2) {
-            background: radial-gradient(circle at 30% 70%, 
-            rgba(255, 215, 0, 0.12), transparent 60%);
-            animation: auraPulse 20s ease-in-out infinite alternate-reverse;
-        }
-
-        .aura-layer:nth-child(3) {
-            background: radial-gradient(circle at 70% 30%, 
-            rgba(255, 20, 147, 0.1), transparent 60%);
-            animation: auraPulse 18s ease-in-out infinite;
-        }
-
-        @keyframes auraPulse {
-            0%   { transform: translate(-25%, -25%) scale(1); opacity: 0.5; }
-            100% { transform: translate(-30%, -20%) scale(1.35); opacity: 0.9; }
-        }
-
-        /* Floating sparkles */
-        .sparkles {
-            position: absolute;
-            inset: 0;
-            background-image: 
-            radial-gradient(2px 2px at 20% 30%, #fff, transparent),
-            radial-gradient(2px 2px at 80% 70%, #0ff, transparent),
-            radial-gradient(1.5px 1.5px at 40% 90%, #ff0, transparent),
-            radial-gradient(2px 2px at 90% 20%, #f0f, transparent);
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            animation: sparkleMove 40s linear infinite;
-            opacity: 0.4;
-        }
-
-        @keyframes sparkleMove {
-            0%   { background-position: 0 0, 0 0, 0 0, 0 0; }
-            100% { background-position: 200px 200px, -200px -200px, 150px -150px, -150px 150px; }
-        }
-
-        /* Mouse-driven subtle tilt parallax */
-        .mouse-parallax {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0,255,200,0.06), rgba(147,112,219,0.04));
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-            transition: transition: transform 0.15s ease-out;
-        }
-
-        /* ============================================= */
-        /* ORIGINAL PAGE STYLES (updated & cleaned)     */
-        /* ============================================= */
-        #matrix-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
+        /* Header with Matrix Rain */
         header {
-            background-image: url('https://via.placeholder.com/1920x1080.png?text=Arena+Background');
-            background-attachment: fixed;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            position:relative;
+            height:100vh;
+            background:url('https://via.placeholder.com/1920x1080/111/222?text=Arena+Background') center/cover fixed;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            overflow:hidden;
         }
-
-        header::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0, 0.6);
-        }
-
+        #matrix-canvas { position:absolute; inset:0; z-index:1; }
+        header::after { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.65); z-index:2; }
         header h1 {
-            font-family: 'Space Mono', monospace;
-            font-size: 5rem;
-            color: #ffffff;
-            font-weight: 700;
-            text-transform: uppercase;
-            z-index: 1;
-            animation: fadeIn 2s ease-in-out;
-            padding: 0rem clamp(1rem, 2vw, 3rem);
-            border-radius: clamp(0.4rem, 0.75vw, 1rem);
+            font-size:clamp(3rem,8vw,6rem);
+            font-weight:700;
+            text-transform:uppercase;
+            color:#fff;
+            z-index:3;
+            animation:fadeIn 2s;
         }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 
-        main {
-            padding: 4rem 2rem 2rem;
-            position: relative;
-            z-index: 1;
-            background: transparent;
-        }
-
+        /* Content */
+        main { position:relative; z-index:1; padding:4rem 2rem; }
         section {
-            padding: 4rem 2rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            padding:4rem 2rem;
+            margin-bottom:2rem;
+            border-bottom:1px solid rgba(255,255,255,0.3);
+            opacity:0;
+            transform:translateY(40px);
+            transition:opacity .8s,transform .8s;
         }
+        section.visible { opacity:1; transform:none; }
+        h2 { font-size:3.5rem; text-transform:uppercase; margin-bottom:1.5rem; }
+        p { font-size:1.2rem; line-height:1.6; margin-bottom:1.2rem; }
 
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        table { width:100%; border-collapse:collapse; margin:2rem 0; }
+        th,td { padding:1rem; border-bottom:1px solid #555; text-align:left; }
+        th { background:rgba(255,255,0.04); }
+        tbody tr:hover { background:#111; }
 
-        h2 {
-            font-family: 'Space Mono', monospace;
-            font-size: 3.5rem;
-            color: #ffffff;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-
-        /* Supplies Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 2rem;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #555;
-        }
-
-        th {
-            font-family: 'Space Mono', monospace;
-            color: #ffffff;
-        }
-
-        tbody tr:hover {
-            background-color: #1a1a1a;
-            transform: scale(1.02);
-            transition: 0.3s;
-        }
-
-        /* Strategies List */
-        ol {
-            list-style: none;
-            counter-reset: strategy-counter;
-            counter-reset: strategy-counter;
-            padding-left: 0;
-        }
-
+        ol { counter-reset:n; list-style:none; padding-left:0; }
         ol li {
-            counter-increment: strategy-counter;
-            margin-bottom: 1.5rem;
-            padding-left: 3rem;
-            position: relative;
+            counter-increment:n;
+            margin:1.8rem 0;
+            padding-left:3.5rem;
+            position:relative;
         }
-
         ol li::before {
-            content: counter(strategy-counter);
-            position: absolute;
-            left: 0;
-            top: 0;
-            font-family: 'Space Mono', monospace;
-            font-size: 2.5rem;
-            color: #ffffff;
+            content:counter(n);
+            position:absolute;
+            left:0;
+            font-size:2.8rem;
+            color:#0ff;
+            opacity:0.7;
         }
 
-        /* Quiz */
-        #quiz-container { margin-top: 2rem; }
-        .question p { font-size: 1.3rem; margin-bottom: 1rem; }
+        .image-container { display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; margin:3rem 0; }
+        .image-container figure { flex:1 1 400px; text-align:center; }
+        .image-container img { max-width:100%; border:2px solid #fff; box-shadow:0 0 12px rgba(255,255,255,0.4); border-radius:6px; }
+
         .answers button {
-            background: transparent;
-            border: 2px solid #fff;
-            color: #fff;
-            padding: 0.8rem 1.5rem;
-            margin: 0.5rem;
-            cursor: pointer;
-            transition: 0.3s;
+            background:transparent;
+            border:2px solid #fff;
+            color:#fff;
+            padding:.8rem 1.5rem;
+            margin:.5rem;
+            cursor:pointer;
+            transition:.3s;
         }
-        .answers button:hover {
-            background: #fff;
-            color: #000;
-            box-shadow: 0 0 15px #fff;
-        }
+        .answers button:hover { background:#fff; color:#000; box-shadow:0 0 15px #fff; }
 
-        /* Images */
-        .image-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-        .image-container figure {
-            margin: 1rem;
-            text-align: center;
-            width: 45%;
-        }
-        .image-container img {
-            max-width: 100%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 0 10px #fff;
-        }
-        .image-container figcaption {
-            margin-top: 0.5rem;
-            color: white;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.5rem;
-            color: white;
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 { font-size: 3rem; }
-            h2 { font-size: 2.5rem; }
-            .image-container figure { width: 100%; }
-        
-            table, thead, tbody, th, td, tr { display: block; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; }
-            td {
-                border: none;
-                border-bottom: 1px solid #444;
-                position: relative;
-                padding-left: 50%;
-            }
-            td:before {
-                position: absolute;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                color: #fff;
-            }
-            td:nth-of-type(1):before { content: "Supply"; }
-            td:nth-of-type(2):before { content: "Benefits"; }
+        footer { text-align:center; padding:4rem; font-size:1.6rem; position:relative; z-index:1; }
+
+        @media (max-width:768px) {
+            h2 { font-size:2.6rem; }
+            .image-container figure { flex-basis:100%; }
+            ol li { padding-left:3rem; }
+            ol li::before { font-size:2.3rem; }
         }
     </style>
 </head>
 <body>
-    <!-- GLIMMERING AURA BACKGROUND (behind everything except header) -->
+
+    <!-- Lightweight glowing aura -->
     <div class="aura-parallax">
-        <div class="aura-layer"></div>
-        <div class="aura-layer"></div>
-        <div class="aura-layer"></div>
-        <div class="sparkles"></div>
-        <div class="mouse-parallax" id="mouseParallax"></div>
+        <div class="aura-light"></div>
+        <div class="aura-light"></div>
+        <div class="mouse-tilt" id="mouseTilt"></div>
     </div>
-    
+
+    </div>
+
     <header>
-        <canvas id="matrix-canvas" ></canvas>
+        <canvas id="matrix-canvas"></canvas>
         <h1 data-value="Welcome, Tributes">Welcome, Tributes</h1>
     </header>
 
@@ -329,74 +162,31 @@
             <h2>Essential Supplies from the Cornucopia</h2>
             <p><b>The Cornucopia is the heart of chaos and entertainment in the first day of the Hunger Games.</b> The ornucopia contains supplies placed by the Gamemakers that help tributes survive with items decreasing in value the further away they are from the horn. Priortize items that allign with your skills, hammers if your bulky and strong or a bow if your a hunter. The following list below contains 10 items seen in previous arenas and their benefits.</p>
             <table>
-                <thead>
-                    <tr>
-                        <th>Supply</th>
-                        <th>Benefits</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Supply</th><th>Benefits</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td>Bow and arrows</td>
-                        <td>The ideal weapon for long range and reliability. The bow can help provide food and defense without close combat, Katniss used this heavily to her advantage in the games.</td>
-                    </tr>
-                    <tr>
-                        <td>Knives</td>
-                        <td>Versatile for close-quarters combat, cutting ropes or vines, and preparing food. Easy to conceal and throw for quick strikes.</td>
-                    </tr>
-                    <tr>
-                        <td>Sleeping bag</td>
-                        <td>Retains body heat during cold nights, preventing hypothermia. Compact and essential for rest without exposure.</td>
-                    </tr>
-                    <tr>
-                        <td>Iodine</td>
-                        <td>Purifies water from streams or lakes, preventing dehydration and illness from contaminated sources. A small bottle can last days.</td>
-                    </tr>
-                    <tr>
-                        <td>Matches</td>
-                        <td>Starts fires for cooking, warmth, and signaling (if desperate). Use sparingly to avoid drawing attention with smoke.</td>
-                    </tr>
-                    <tr>
-                        <td>Wire coil</td>
-                        <td>Sets snares for trapping animals or creating alarms/tripwires against other tributes. Multifunctional for repairs or traps.</td>
-                    </tr>
-                    <tr>
-                        <td>Night-vision glasses</td>
-                        <td>Allows visibility in darkness, giving an edge for nighttime movement or ambushes while others are blind.</td>
-                    </tr>
-                    <tr>
-                        <td>Empty water bottle</td>
-                        <td>Stores clean water once purified; crucial for hydration during long treks away from sources.</td>
-                    </tr>
-                    <tr>
-                        <td>Backpack</td>
-                        <td>Organizes and carries multiple items hands-free, increasing mobility. Often pre-packed with basics like food or tools.</td>
-                    </tr>
-                    <tr>
-                        <td>Rope</td>
-                        <td>Useful for climbing trees, tying shelters, or making lassos. Strong for binding wounds or securing gear.</td>
-                    </tr>
-                    <tr>
-                        <td>Bread</td>
-                        <td>Quick energy source; non-perishable and shareable in alliances. Sustains you during early starvation risks.</td>
-                    </tr>
-                    <tr>
-                        <td>Apples</td>
-                        <td>Fresh fruit for hydration and vitamins; lightweight and edible raw to combat hunger without cooking.</td>
-                    </tr>
-                    <tr>
-                        <td>Dried beef strips</td>
-                        <td>High-protein, long-lasting food that doesn't spoil quickly. Boosts strength and endurance for prolonged survival.</td>
-                    </tr>
+                    <tr><td>Bow and arrows</td><td>The ideal weapon for long range and reliability. The bow can help provide food and defense without close combat, Katniss used this heavily to her advantage in the games.</td></tr>
+                    <tr><td>Knives</td><td>Versatile for close-quarters combat, cutting ropes or vines, and preparing food. Easy to conceal and throw for quick strikes.</td></tr>
+                    <tr><td>Sleeping bag</td><td>Retains body heat during cold nights, preventing hypothermia. Compact and essential for rest without exposure.</td></tr>
+                    <tr><td>Iodine</td><td>Purifies water from streams or lakes, preventing dehydration and illness from contaminated sources. A small bottle can last days.</td></tr>
+                    <tr><td>Matches</td><td>Starts fires for cooking, warmth, and signaling (if desperate). Use sparingly to avoid drawing attention with smoke.</td></tr>
+                    <tr><td>Wire coil</td><td>Sets snares for trapping animals or creating alarms/tripwires against other tributes. Multifunctional for repairs or traps.</td></tr>
+                    <tr><td>Night-vision glasses</td><td>Allows visibility in darkness, giving an edge for nighttime movement or ambushes while others are blind.</td></tr>
+                    <tr><td>Empty water bottle</td><td>Stores clean water once purified; crucial for hydration during long treks away from sources.</td></tr>
+                    <tr><td>Backpack</td><td>Organizes and carries multiple items hands-free, increasing mobility. Often pre-packed with basics like food or tools.</td></tr>
+                    <tr><td>Rope</td><td>Useful for climbing trees, tying shelters, or making lassos. Strong for binding wounds or securing gear.</td></tr>
+                    <tr><td>Bread</td><td>Quick energy source; non-perishable and shareable in alliances. Sustains you during early starvation risks.</td></tr>
+                    <tr><td>Apples</td><td>Fresh fruit for hydration and vitamins; lightweight and edible raw to combat hunger without cooking.</td></tr>
+                    <tr><td>Dried beef strips</td><td>High-protein, long-lasting food that doesn't spoil quickly. Boosts strength and endurance for prolonged survival.</td></tr>
                 </tbody>
             </table>
+
             <div class="image-container">
                 <figure>
                     <img src="https://static.wikia.nocookie.net/thehungergames/images/c/c7/Cornucopia_Supplies.jpg/revision/latest?cb=20130604124916" alt="Cornucopia">
                     <figcaption>The Cornucopia: high risk, high reward.</figcaption>
                 </figure>
                 <figure>
-                    <img src="https://static.wikia.nocookie.net/thehungergames/images/3/34/Katniss_Hunting.jpg/revision/latest/scale-to-width-down/3987?cb=20190816160031" alt="Tribute with bow">
+                    <img src="https://static.wikia.nookie.net/thehungergames/images/3/34/Katniss_Hunting.jpg/revision/latest/scale-to-width-down/3987?cb=20190816160031" alt="Tribute with bow">
                     <figcaption>A bow can be your most valuable asset.</figcaption>
                 </figure>
             </div>
@@ -417,6 +207,7 @@
                 <li>Set Traps and Alarms: Use wire or rope to booby-trap areas, alerting you to intruders or catching food.</li>
                 <li>Stay Mobile and Alert: Don't camp in one spot too long. Move quietly, listen for cannons, and adapt to Gamemaker twists like fires or mutts.</li>
             </ol>
+
             <div class="image-container">
                 <figure>
                     <img src="https://cdn-0001.qstv.on.epicgames.com/TJtwTolgAVdXVTTXAc/image/landscape_comp.jpeg" alt="Arena landscape">
@@ -431,9 +222,8 @@
 
         <section id="quiz">
             <h2>Survival Quiz</h2>
-            <div id="quiz-container">
-                <!-- Quiz will be dynamically generated here -->
-            </div>
+            <div id="quiz-container"></div>
+        </div>
         </section>
     </main>
 
@@ -442,225 +232,96 @@
     </footer>
 
     <script>
+        // Text scramble effect
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let interval = null;
-
-        // The core logic wrapped in a reusable function
-        const handleScramble = (event) => {
-            // Determine the target element (it's 'event.target' for mouseover, 
-            // or the element itself when called directly on load)
-            const element = event.target || event; 
-
-            // Make sure the element has the data-value attribute
-            if (!element.dataset.value) return;
-
-            let iteration = 0;
-            // Clear any existing intervals if the mouse moves quickly
-            clearInterval(interval); 
-
+        const scramble = el => {
+            let i = 0;
+            clearInterval(interval);
             interval = setInterval(() => {
-                element.innerText = element.innerText
-                    .split("")
-                    .map((letter, index) => {
-                        if (index < iteration) {
-                            return element.dataset.value[index];
-                        }
-                        return letters[Math.floor(Math.random() * 26)];
-                    })
-                    .join("");
-
-                if (iteration >= element.dataset.value.length) {
-                    clearInterval(interval);
-                }
-
-                iteration += 1 / 3;
+                el.innerText = el.dataset.value.split("").map((l, idx) => idx < i ? l : letters[Math.floor(Math.random()*26)]).join("");
+                if (i >= el.dataset.value.length) clearInterval(interval);
+                i += 1/3;
             }, 30);
         };
-
-
-        // ----------------------------------------------------
-        // Attach both event listeners
-        // ----------------------------------------------------
-
         document.addEventListener("DOMContentLoaded", () => {
-            const h1Element = document.querySelector("h1");
-
-            if (h1Element) {
-                // 1. Trigger ON LOAD automatically once the page loads
-                // We pass the element itself since there's no 'event' object yet
-                handleScramble(h1Element); 
-
-                // 2. Re-attach the ON MOUSEOVER listener
-                // The browser provides the 'event' object when the mouse moves over
-                h1Element.onmouseover = handleScramble;
-            }
+            const h1 = document.querySelector("h1");
+            scramble(h1);
+            h1.onmouseover = e => scramble(e.target);
         });
 
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Scroll Animations
-            const sections = document.querySelectorAll('section');
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            sections.forEach(section => {
-                observer.observe(section);
+        // Scroll reveal
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('section').forEach(s => observer.observe(s));
 
-            // Survival Quiz
-            const quizContainer = document.getElementById('quiz-container');
-            const quizData = [
-                {
-                    question: "What is the first priority upon entering the arena?",
-                    answers: ["Find a weapon", "Build a shelter", "Find a water source", "Form an alliance"],
-                    correct: "Find a water source"
-                },
-                {
-                    question: "When is it safest to move around the arena?",
-                    answers: ["Midday", "During the night", "At dawn", "During a Gamemaker event"],
-                    correct: "During the night"
-                },
-                {
-                    question: "What is the most common cause of death in the early stages of the Games?",
-                    answers: ["Starvation", "Dehydration", "The Cornucopia bloodbath", "Wild animals"],
-                    correct: "The Cornucopia bloodbath"
-                },
-                {
-                    question: "A sponsor sends you a small loaf of bread. What does it likely mean?",
-                    answers: ["You are their favorite", "You need energy", "It's a trap", "They are from your district"],
-                    correct: "You need energy"
-                }
-            ];
-
-            let score = 0;
-            let currentQuestionIndex = 0;
-
-            function loadQuiz() {
-                quizContainer.innerHTML = ''; // Clear previous content
-                if (currentQuestionIndex < quizData.length) {
-                    const currentQuestion = quizData[currentQuestionIndex];
-                    const questionEl = document.createElement('div');
-                    questionEl.classList.add('question');
-                    questionEl.innerHTML = `<p>${currentQuestionIndex + 1}. ${currentQuestion.question}</p>`;
-
-                    const answersEl = document.createElement('div');
-                    answersEl.classList.add('answers');
-
-                    currentQuestion.answers.forEach(answer => {
-                        const button = document.createElement('button');
-                        button.innerText = answer;
-                        button.addEventListener('click', () => selectAnswer(answer, currentQuestion.correct, answersEl));
-                        answersEl.appendChild(button);
-                    });
-
-                    questionEl.appendChild(answersEl);
-                    quizContainer.appendChild(questionEl);
-                } else {
-                    showResults();
-                }
+        // Quiz
+        const quizContainer = document.getElementById('quiz-container');
+        const quizData = [
+            {question:"What is the first priority upon entering the arena?",answers:["Find a weapon","Build a shelter","Find a water source","Form an alliance"],correct:"Find a water source"},
+            {question:"When is it safest to move around the arena?",answers:["Midday","During the night","At dawn","During a Gamemaker event"],correct:"During the night"},
+            {question:"What is the most common cause of death in the early stages of the Games?",answers:["Starvation","Dehydration","The Cornucopia bloodbath","Wild animals"],correct:"The Cornucopia bloodbath"},
+            {question:"A sponsor sends you a small loaf of bread. What does it likely mean?",answers:["You are their favorite","You need energy","It's a trap","They are from your district"],correct:"You need energy"}
+        ];
+        let score = 0, q = 0;
+        const nextQuestion = () => {
+            if (q >= quizData.length) {
+                quizContainer.innerHTML = `<div id="quiz-results">You scored ${score} out of ${quizData.length}!</div><p>${score===4?"Excellent! You have the makings of a victor.":score>=2?"Not bad, tribute. You might just survive the first few days.":"You need more training. The arena will not be so forgiving."}</p>`;
+                </p>`;
+                return;
             }
+            const d = quizData[q];
+            quizContainer.innerHTML = `<div class="question"><p><strong>${q+1}. ${d.question}</strong></p><div class="answers"></div></div>`;
+            d.answers.forEach(a => {
+                const btn = document.createElement('button');
+                btn.textContent = a;
+                btn.onclick = () => {
+                    if (a===d.correct) score++;
+                    document.querySelectorAll('.answers button').forEach(b=>b.disabled=true);
+                    btn.style.background = a===d.correct?'#0f0':'#f00';
+                    btn.style.color='#000';
+                    setTimeout(() => { q++; nextQuestion(); }, 1500);
+                };
+                quizContainer.querySelector('.answers').appendChild(btn);
+            });
+        };
+        nextQuestion();
 
-            function selectAnswer(selected, correct, answersEl) {
-                if (selected === correct) {
-                    score++;
-                }
-                // Disable all buttons for this question
-                const buttons = answersEl.querySelectorAll('button');
-                buttons.forEach(button => {
-                    button.disabled = true;
-                    if(button.innerText === correct) {
-                        button.style.backgroundColor = '#00ff00';
-                        button.style.color = '#000';
-                    } else if (button.innerText === selected) {
-                        button.style.backgroundColor = '#ff0000';
-                    }
-                });
+        // Matrix rain with mockingjay
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = 'https://uproxx.com/wp-content/uploads/2015/06/mockingjay-optical-illusion.jpg?w=1024';
+        let drops = [];
+        const setup = () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            drops = Array(Math.floor(canvas.width/20)).fill(1);
+        };
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+            drops.forEach((d,i) => {
+                ctx.drawImage(img, i*20, d*20, 20, 20);
+                if (d*20 > canvas.height && Math.random()>0.975) drops[i]=0;
+                drops[i]++;
+            });
+        };
+        img.onload = () => { setup(); setInterval(draw,33); };
+        window.addEventListener('resize', setup);
 
-                // Load the next question after a short delay
-                setTimeout(() => {
-                    currentQuestionIndex++;
-                    loadQuiz();
-                }, 1500);
-            }
-
-            function showResults() {
-                quizContainer.innerHTML = `<div id="quiz-results">You scored ${score} out of ${quizData.length}!</div>`;
-                let feedback = '';
-                if(score === quizData.length){
-                    feedback = "Excellent! You have the makings of a victor."
-                } else if (score >= quizData.length / 2) {
-                    feedback = "Not bad, tribute. You might just survive the first few days."
-                } else {
-                    feedback = "You need more training. The arena will not be so forgiving."
-                }
-                quizContainer.innerHTML += `<p>${feedback}</p>`;
-            }
-
-            loadQuiz();
-
-            // Matrix Rain Effect
-            const canvas = document.getElementById('matrix-canvas');
-            const ctx = canvas.getContext('2d');
-
-            const mockingjay = new Image();
-            mockingjay.src = 'https://uproxx.com/wp-content/uploads/2015/06/mockingjay-optical-illusion.jpg?w=1024';
-
-            let drops = [];
-
-            function setup() {
-                const header = document.querySelector('header');
-                canvas.width = header.clientWidth;
-                canvas.height = header.clientHeight;
-
-                const columns = Math.floor(canvas.width / 20);
-                drops = [];
-                for (let i = 0; i < columns; i++) {
-                    drops[i] = 1;
-                }
-            }
-
-            function draw() {
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                ctx.fillStyle = '#0F0';
-
-                for (let i = 0; i < drops.length; i++) {
-                    const x = i * 20;
-                    const y = drops[i] * 20;
-                    ctx.drawImage(mockingjay, x, y, 20, 20);
-
-                    if (y > canvas.height && Math.random() > 0.975) {
-                        drops[i] = 0;
-                    }
-                    drops[i]++;
-                }
-            }
-
-            mockingjay.onload = () => {
-                setup();
-                setInterval(draw, 33);
-            };
-
-            window.addEventListener('resize', setup);
-        });
-        // === NEW: Mouse parallax effect for the aura ===
-        const mouseParallax = document.getElementById('mouseParallax');
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100 - 50;
-            const y = (e.clientY / window.innerHeight) * 100 - 50;
-            mouseParallax.style.transform = `perspective(1000px) rotateY(${x * 0.15}deg) rotateX(${y * 0.15}deg)`;
-        });
-
-        // Reset on mouse leave (optional smooth return)
-        document.addEventListener('mouseleave', () => {
-            mouseParallax.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+        // Lightweight mouse parallax
+        const tilt = document.getElementById('mouseTilt');
+        document.addEventListener('mousemove', e => {
+            const x = (e.clientX / innerWidth - 0.5) * 16;
+            const y = (e.clientY / innerHeight - 0.5) * 16;
+            tilt.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg)`;
         });
     </script>
 </body>
