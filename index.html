@@ -8,28 +8,103 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
-        /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Permanent+Marker&display=swap');
 
-        /* Basic Styles */
+        /* ============================================= */
+        /* GLIMMERING AURA + PARALLAX BACKGROUND (everything except header) */
+        /* ============================================= */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fixed parallax container behind everything except the header */
+        .aura-parallax {
+            position: fixed;
+            inset: 0;
+            top: 100vh; /* Starts right after the header */
+            pointer-events: none;
+            z-index: -1;
+            transform: translateZ(0);
+        }
+
+        /* Breathing aura layers */
+        .aura-layer {
+            position: absolute;
+            absolute;
+            width: 200%;
+            height: 300%;
+            background: radial-gradient(circle at 50% 50%, 
+            rgba(0, 255, 200, 0.15) 0%,
+            rgba(150, 0, 255, 0.1) 30%,
+            transparent 70%);
+            animation: auraPulse 14s ease-in-out infinite alternate;
+            transform: translate(-25%, -25%);
+        }
+
+        .aura-layer:nth-child(2) {
+            background: radial-gradient(circle at 30% 70%, 
+            rgba(255, 215, 0, 0.12), transparent 60%);
+            animation: auraPulse 20s ease-in-out infinite alternate-reverse;
+        }
+
+        .aura-layer:nth-child(3) {
+            background: radial-gradient(circle at 70% 30%, 
+            rgba(255, 20, 147, 0.1), transparent 60%);
+            animation: auraPulse 18s ease-in-out infinite;
+        }
+
+        @keyframes auraPulse {
+            0%   { transform: translate(-25%, -25%) scale(1); opacity: 0.5; }
+            100% { transform: translate(-30%, -20%) scale(1.35); opacity: 0.9; }
+        }
+
+        /* Floating sparkles */
+        .sparkles {
+            position: absolute;
+            inset: 0;
+            background-image: 
+            radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+            radial-gradient(2px 2px at 80% 70%, #0ff, transparent),
+            radial-gradient(1.5px 1.5px at 40% 90%, #ff0, transparent),
+            radial-gradient(2px 2px at 90% 20%, #f0f, transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: sparkleMove 40s linear infinite;
+            opacity: 0.4;
+        }
+
+        @keyframes sparkleMove {
+            0%   { background-position: 0 0, 0 0, 0 0, 0 0; }
+            100% { background-position: 200px 200px, -200px -200px, 150px -150px, -150px 150px; }
+        }
+
+        /* Mouse-driven subtle tilt parallax */
+        .mouse-parallax {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,255,200,0.06), rgba(147,112,219,0.04));
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+            transition: transition: transform 0.15s ease-out;
+        }
+
+        /* ============================================= */
+        /* ORIGINAL PAGE STYLES (updated & cleaned)     */
+        /* ============================================= */
         #matrix-canvas {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
         }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Space Mono', monospace;;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Header */
         header {
             background-image: url('https://via.placeholder.com/1920x1080.png?text=Arena+Background');
             background-attachment: fixed;
@@ -42,16 +117,14 @@
             align-items: center;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
 
         header::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            inset: 0;
+            background: rgba(0, 0, 0, 0, 0.6);
         }
 
         header h1 {
@@ -65,16 +138,18 @@
             padding: 0rem clamp(1rem, 2vw, 3rem);
             border-radius: clamp(0.4rem, 0.75vw, 1rem);
         }
-        
-        /* Main Content */
+
         main {
-            padding: 2rem;
+            padding: 4rem 2rem 2rem;
+            position: relative;
+            z-index: 1;
+            background: transparent;
         }
 
         section {
             padding: 4rem 2rem;
             margin-bottom: 2rem;
-            border-bottom: 1px solid white;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -120,12 +195,13 @@
         tbody tr:hover {
             background-color: #1a1a1a;
             transform: scale(1.02);
-            transition: background-color: 0.3s, transform 0.3s;
+            transition: 0.3s;
         }
 
         /* Strategies List */
         ol {
             list-style: none;
+            counter-reset: strategy-counter;
             counter-reset: strategy-counter;
             padding-left: 0;
         }
@@ -145,141 +221,99 @@
             font-family: 'Space Mono', monospace;
             font-size: 2.5rem;
             color: #ffffff;
-            
         }
 
-        /* Quiz Section */
-        #quiz-container {
-            margin-top: 2rem;
-        }
-
-        .question {
-            margin-bottom: 1.5rem;
-        }
-
-        .question p {
-            font-family: 'Space Mono', monospace;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-        }
-
+        /* Quiz */
+        #quiz-container { margin-top: 2rem; }
+        .question p { font-size: 1.3rem; margin-bottom: 1rem; }
         .answers button {
             background: transparent;
-            border: 2px solid #ffffff;
-            color: #ffffff;
+            border: 2px solid #fff;
+            color: #fff;
             padding: 0.8rem 1.5rem;
             margin: 0.5rem;
             cursor: pointer;
-            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+            transition: 0.3s;
         }
-
         .answers button:hover {
-            background: #ffffff;
+            background: #fff;
             color: #000;
-            box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+            box-shadow: 0 0 15px #fff;
         }
 
-        #quiz-results {
-            margin-top: 2rem;
-            font-size: 1.5rem;
-            font-family: 'Space Mono', monospace;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            font-family: 'Space Mono', monospace;
-            font-size: 1.5rem;
-            color: white;
-            
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
+        /* Images */
         .image-container {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             margin-top: 2rem;
         }
-
         .image-container figure {
             margin: 1rem;
             text-align: center;
             width: 45%;
         }
-
         .image-container img {
             max-width: 100%;
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 10px #ffffff;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 10px #fff;
         }
-
         .image-container figcaption {
             margin-top: 0.5rem;
-            font-family: 'Space Mono', monospace;
             color: white;
         }
-
-        /* Responsive Design */
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .image-container figure {
-                width: 100%;
-            }
-
-            header h1 {
-                font-size: 3rem;
-            }
-
-            h2 {
-                font-size: 2rem;
-            }
-
-            p {
-                font-size: 1rem;
-            }
-
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            tr { border: 1px solid #ccc; }
-
+            header h1 { font-size: 3rem; }
+            h2 { font-size: 2.5rem; }
+            .image-container figure { width: 100%; }
+        
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
             td {
                 border: none;
-                border-bottom: 1px solid #eee;
+                border-bottom: 1px solid #444;
                 position: relative;
                 padding-left: 50%;
             }
-
             td:before {
                 position: absolute;
-                top: 6px;
                 left: 6px;
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
-                font-family: 'Orbitron', sans-serif;
-                color: #ffffff;
+                color: #fff;
             }
-
             td:nth-of-type(1):before { content: "Supply"; }
             td:nth-of-type(2):before { content: "Benefits"; }
         }
     </style>
 </head>
 <body>
+    <!-- GLIMMERING AURA BACKGROUND (behind everything except header) -->
+    <div class="aura-parallax">
+        <div class="aura-layer"></div>
+        <div class="aura-layer"></div>
+        <div class="aura-layer"></div>
+        <div class="sparkles"></div>
+        <div class="mouse-parallax" id="mouseParallax"></div>
+    </div>
+    
     <header>
         <canvas id="matrix-canvas" ></canvas>
         <h1 data-value="Welcome, Tributes">Welcome, Tributes</h1>
@@ -615,6 +649,18 @@
             };
 
             window.addEventListener('resize', setup);
+        });
+        // === NEW: Mouse parallax effect for the aura ===
+        const mouseParallax = document.getElementById('mouseParallax');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100 - 50;
+            const y = (e.clientY / window.innerHeight) * 100 - 50;
+            mouseParallax.style.transform = `perspective(1000px) rotateY(${x * 0.15}deg) rotateX(${y * 0.15}deg)`;
+        });
+
+        // Reset on mouse leave (optional smooth return)
+        document.addEventListener('mouseleave', () => {
+            mouseParallax.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
         });
     </script>
 </body>
