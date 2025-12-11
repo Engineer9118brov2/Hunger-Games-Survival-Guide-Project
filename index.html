@@ -24,76 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* Fixed parallax container behind everything except the header */
-        .aura-parallax {
-            position: fixed;
-            inset: 0;
-            top: 100vh; /* Starts right after the header */
-            pointer-events: none;
-            z-index: -1;
-            transform: translateZ(0);
-        }
-
-        /* Breathing aura layers */
-        .aura-layer {
-            position: absolute;
-            absolute;
-            width: 200%;
-            height: 300%;
-            background: radial-gradient(circle at 50% 50%, 
-            rgba(0, 255, 200, 0.15) 0%,
-            rgba(150, 0, 255, 0.1) 30%,
-            transparent 70%);
-            animation: auraPulse 14s ease-in-out infinite alternate;
-            transform: translate(-25%, -25%);
-        }
-
-        .aura-layer:nth-child(2) {
-            background: radial-gradient(circle at 30% 70%, 
-            rgba(255, 215, 0, 0.12), transparent 60%);
-            animation: auraPulse 20s ease-in-out infinite alternate-reverse;
-        }
-
-        .aura-layer:nth-child(3) {
-            background: radial-gradient(circle at 70% 30%, 
-            rgba(255, 20, 147, 0.1), transparent 60%);
-            animation: auraPulse 18s ease-in-out infinite;
-        }
-
-        @keyframes auraPulse {
-            0%   { transform: translate(-25%, -25%) scale(1); opacity: 0.5; }
-            100% { transform: translate(-30%, -20%) scale(1.35); opacity: 0.9; }
-        }
-
-        /* Floating sparkles */
-        .sparkles {
-            position: absolute;
-            inset: 0;
-            background-image: 
-            radial-gradient(2px 2px at 20% 30%, #fff, transparent),
-            radial-gradient(2px 2px at 80% 70%, #0ff, transparent),
-            radial-gradient(1.5px 1.5px at 40% 90%, #ff0, transparent),
-            radial-gradient(2px 2px at 90% 20%, #f0f, transparent);
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            animation: sparkleMove 40s linear infinite;
-            opacity: 0.4;
-        }
-
-        @keyframes sparkleMove {
-            0%   { background-position: 0 0, 0 0, 0 0, 0 0; }
-            100% { background-position: 200px 200px, -200px -200px, 150px -150px, -150px 150px; }
-        }
-
-        /* Mouse-driven subtle tilt parallax */
-        .mouse-parallax {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0,255,200,0.06), rgba(147,112,219,0.04));
-            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-            transition: transition: transform 0.15s ease-out;
-        }
-
+        
         /* ============================================= */
         /* ORIGINAL PAGE STYLES (updated & cleaned)     */
         /* ============================================= */
@@ -327,7 +258,7 @@
 
         <section id="supplies">
             <h2>Essential Supplies from the Cornucopia</h2>
-            <p><b>The Cornucopia is the heart of chaos and entertainment in the first day of the Hunger Games.</b> The ornucopia contains supplies placed by the Gamemakers that help tributes survive with items decreasing in value the further away they are from the horn. Priortize items that allign with your skills, hammers if your bulky and strong or a bow if your a hunter. The following list below contains 10 items seen in previous arenas and their benefits.</p>
+            <p><b>The Cornucopia is the heart of chaos and entertainment in the first day of the Hunger Games.</b> The Cornucopia contains supplies placed by the Gamemakers that help tributes survive with items decreasing in value the further away they are from the horn. Priortize items that allign with your skills, hammers if your bulky and strong or a bow if your a hunter. The following list below contains 10 items seen in previous arenas and their benefits.</p>
             <table>
                 <thead>
                     <tr>
@@ -337,11 +268,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Bow and arrows</td>
+                        <td>Bow and arrows <br> »┼)➝ </td>
                         <td>The best weapon for long range and reliability. The bow can help provide food and defend without hand-to-hand combat. Has one flaw: you can run out of arrows.</td>
                     </tr>
                     <tr>
-                        <td>Knives</td>
+                        <td>Knives <br> ▬ι𓆃 </td>
                         <td>A close combat weapon that can be a used for almost everything, from cutting ropes to hacking trees, and preparing food. Easy to hide and throw for quick defense.</td>
                     </tr>
                     <tr>
@@ -407,7 +338,7 @@
             <p>Survival isn't just about supplies, it's also about strategy. Based on my many years of experience, I noticed that the tributes with the best tactics and half decent strength have a good chance of winning. Here are some tactics that should be adapted based on the arena's environment. </p>
             <ol>
                 <li>Assess the Situation at First: If you're strong like a Career run for the Cornucopia for supplies. In other cases, run to the edges of the arena becuase many tributes die in the first minutes due to the strength of the Careers.</li>
-                <li>Prioritize Water: Dehydration kills faster than hunger. Locate streams or lakes early and purify with iodine. Stay near water but hidden to avoid ambushes.</li>
+                <li>Prioritize Water: Dehydration kills faster than hunger. Locate streams or lakes early in the games so you can find it incase of an emergency (for example you are injured and you need water to sooth the wound). Remember to purify the water with iodine found in the Cornucopia. </li>
                 <li>Forage and Hunt: Use skills like trapping with wire or shooting game to sustain yourself. Edible plants and roots can supplement; test carefully to avoid poison.</li>
                 <li>Form Strategic Alliances: Partner with compatible tributes for protection and shared resources, but be ready to betray when numbers dwindle. Trust is temporary.</li>
                 <li>Camouflage and Hide: Blend into the environment using mud, leaves, or painting skills. Climb trees for safety and vantage points, like Rue did.</li>
@@ -650,18 +581,7 @@
 
             window.addEventListener('resize', setup);
         });
-        // === NEW: Mouse parallax effect for the aura ===
-        const mouseParallax = document.getElementById('mouseParallax');
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth) * 100 - 50;
-            const y = (e.clientY / window.innerHeight) * 100 - 50;
-            mouseParallax.style.transform = `perspective(1000px) rotateY(${x * 0.15}deg) rotateX(${y * 0.15}deg)`;
-        });
-
-        // Reset on mouse leave (optional smooth return)
-        document.addEventListener('mouseleave', () => {
-            mouseParallax.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
-        });
+        
     </script>
 </body>
 </html>
